@@ -5,6 +5,21 @@ const API_URL = import.meta.env.DEV ? 'http://localhost:5000/api' : '/api';
 
 // ============ PARTICIPANTS ============
 
+const handleResponse = async (response) => {
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'API Request Failed');
+        }
+        return data;
+    } else {
+        const text = await response.text();
+        console.error("Non-JSON API Response:", text);
+        throw new Error("Server Error: Received non-JSON response from API. Check server logs.");
+    }
+};
+
 export const registerParticipant = async (data) => {
     try {
         const response = await fetch(`${API_URL}/participants`, {
@@ -12,8 +27,7 @@ export const registerParticipant = async (data) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        const result = await response.json();
-        return result;
+        return await handleResponse(response);
     } catch (error) {
         console.error('Registration Error:', error);
         throw error;
@@ -23,7 +37,7 @@ export const registerParticipant = async (data) => {
 export const getParticipants = async () => {
     try {
         const response = await fetch(`${API_URL}/participants`);
-        return await response.json();
+        return await handleResponse(response);
     } catch (error) {
         console.error('Fetch Participants Error:', error);
         return [];
@@ -33,7 +47,7 @@ export const getParticipants = async () => {
 export const clearParticipants = async () => {
     try {
         const response = await fetch(`${API_URL}/participants`, { method: 'DELETE' });
-        return await response.json();
+        return await handleResponse(response);
     } catch (error) {
         console.error('Clear Participants Error:', error);
         throw error;
@@ -49,8 +63,7 @@ export const registerOrganizer = async (data) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        const result = await response.json();
-        return result;
+        return await handleResponse(response);
     } catch (error) {
         console.error('Organizer Registration Error:', error);
         throw error;
@@ -60,7 +73,7 @@ export const registerOrganizer = async (data) => {
 export const getOrganizers = async () => {
     try {
         const response = await fetch(`${API_URL}/organizers`);
-        return await response.json();
+        return await handleResponse(response);
     } catch (error) {
         console.error('Fetch Organizers Error:', error);
         return [];
@@ -70,7 +83,7 @@ export const getOrganizers = async () => {
 export const clearOrganizers = async () => {
     try {
         const response = await fetch(`${API_URL}/organizers`, { method: 'DELETE' });
-        return await response.json();
+        return await handleResponse(response);
     } catch (error) {
         console.error('Clear Organizers Error:', error);
         throw error;
@@ -82,7 +95,7 @@ export const clearOrganizers = async () => {
 export const getStats = async () => {
     try {
         const response = await fetch(`${API_URL}/stats`);
-        return await response.json();
+        return await handleResponse(response);
     } catch (error) {
         console.error('Fetch Stats Error:', error);
         return { participants: 0, organizers: 0 };
