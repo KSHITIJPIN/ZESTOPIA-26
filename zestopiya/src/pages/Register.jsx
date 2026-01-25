@@ -72,8 +72,8 @@ const Register = () => {
             Object.keys(formData).forEach(key => {
                 if (!coreFields.includes(key)) {
                     payload.eventDetails[key] = formData[key];
-                    // Clean up top-level dynamic keys if strict backend requires (optional, but cleaner)
-                    // delete payload[key]; 
+                    // Clean up top-level dynamic keys
+                    delete payload[key];
                 }
             });
 

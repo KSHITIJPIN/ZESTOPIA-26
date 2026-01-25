@@ -29,7 +29,7 @@ const participantSchema = new mongoose.Schema({
     specialReq: String,
     eventDetails: { type: mongoose.Schema.Types.Mixed, default: {} },
     timestamp: { type: Date, default: Date.now }
-});
+}, { strict: false });
 
 // Organizer Schema
 const organizerSchema = new mongoose.Schema({
@@ -43,7 +43,7 @@ const organizerSchema = new mongoose.Schema({
     role: String,
     specialReq: String,
     timestamp: { type: Date, default: Date.now }
-});
+}, { strict: false });
 
 const Participant = mongoose.models.Participant || mongoose.model('Participant', participantSchema);
 const Organizer = mongoose.models.Organizer || mongoose.model('Organizer', organizerSchema);
