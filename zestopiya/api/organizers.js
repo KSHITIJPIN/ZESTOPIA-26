@@ -1,6 +1,6 @@
-const { connectDB, Organizer } = require('./_db');
+import { connectDB, Organizer } from './_db.js';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
     // CORS headers
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -42,4 +42,4 @@ module.exports = async function handler(req, res) {
         console.error('API Error:', error);
         return res.status(500).json({ success: false, message: error.message });
     }
-};
+}

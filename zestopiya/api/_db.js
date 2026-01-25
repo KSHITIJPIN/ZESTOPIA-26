@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Vercel Serverless: Efficiently handle database connection caching
 let cached = global.mongoose;
@@ -7,7 +7,7 @@ if (!cached) {
     cached = global.mongoose = { conn: null, promise: null };
 }
 
-const connectDB = async () => {
+export const connectDB = async () => {
     if (cached.conn) {
         return cached.conn;
     }
@@ -15,7 +15,6 @@ const connectDB = async () => {
     if (!cached.promise) {
         const opts = {
             bufferCommands: false,
-            // connectTimeoutMS: 10000, 
         };
 
         if (!process.env.MONGODB_URI) {
@@ -67,7 +66,5 @@ const organizerSchema = new mongoose.Schema({
     timestamp: { type: Date, default: Date.now }
 });
 
-const Participant = mongoose.models.Participant || mongoose.model('Participant', participantSchema);
-const Organizer = mongoose.models.Organizer || mongoose.model('Organizer', organizerSchema);
-
-module.exports = { connectDB, Participant, Organizer };
+export const Participant = mongoose.models.Participant || mongoose.model('Participant', participantSchema);
+export const Organizer = mongoose.models.Organizer || mongoose.model('Organizer', organizerSchema);
