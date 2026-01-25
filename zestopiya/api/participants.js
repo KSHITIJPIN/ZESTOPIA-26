@@ -16,12 +16,44 @@ export default async function handler(req, res) {
 
         // POST - Register new participant
         if (req.method === 'POST') {
+            const formData = req.body;
+
+            // Normalize
+            const normalizedEmail = formData.email ? formData.email.trim().toLowerCase() : '';
+
+            // 1. Basic Validation
+            if (!normalizedEmail || !formData.name) {
+                return res.status(400).json({ success: false, message: 'Name and Email are required.' });
+            }
+
+            // 2. Check Duplicate (Active only)
+            // Note: DB unique index handles global uniqueness, but this gives better error msg
+            const existing = await Participant.findOne({
+                email: normalizedEmail,
+                event: formData.event,
+                isDeleted: false
+            });
+
+            if (existing) {
+                return res.status(409).json({ success: false, message: 'You have already registered for this event!' });
+            }
+
             const participant = new Participant({
-                ...req.body,
+                ...formData,
+                email: normalizedEmail, // Save normalized
                 timestamp: new Date()
             });
-            await participant.save();
-            return res.status(200).json({ success: true, message: 'Registration successful!' });
+
+            try {
+                await participant.save();
+                return res.status(200).json({ success: true, message: 'Registration successful!' });
+            } catch (saveError) {
+                // Handle Race Condition / Unique Constraint
+                if (saveError.code === 11000) {
+                    return res.status(409).json({ success: false, message: 'Duplicate registration detected.' });
+                }
+                throw saveError;
+            }
         }
 
         // GET - Get all participants
