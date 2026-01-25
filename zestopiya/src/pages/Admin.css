@@ -276,3 +276,9 @@
     color: rgb(var(--primary));
     border: 1px solid rgba(255, 60, 172, 0.3);
 }
+
+/* Widen the admin container */
+.admin-page.container {
+    max-width: 95vw;
+    width: 95%;
+}
