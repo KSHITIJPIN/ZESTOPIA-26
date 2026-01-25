@@ -30,10 +30,17 @@ export default async function handler(req, res) {
             return res.status(200).json(data);
         }
 
-        // DELETE - Clear all organizers
+        // DELETE - Delete organizer(s)
         if (req.method === 'DELETE') {
-            await Organizer.deleteMany({});
-            return res.status(200).json({ success: true, message: 'All organizers deleted' });
+            const { id } = req.query;
+
+            if (id) {
+                await Organizer.findByIdAndDelete(id);
+                return res.status(200).json({ success: true, message: 'Organizer deleted successfully' });
+            } else {
+                await Organizer.deleteMany({});
+                return res.status(200).json({ success: true, message: 'All organizers deleted' });
+            }
         }
 
         return res.status(405).json({ error: 'Method not allowed' });

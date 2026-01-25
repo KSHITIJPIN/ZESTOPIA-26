@@ -54,6 +54,16 @@ export const clearParticipants = async () => {
     }
 };
 
+export const deleteParticipant = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/participants?id=${id}`, { method: 'DELETE' });
+        return await handleResponse(response);
+    } catch (error) {
+        console.error('Delete Participant Error:', error);
+        throw error;
+    }
+};
+
 // ============ ORGANIZERS ============
 
 export const registerOrganizer = async (data) => {
@@ -86,6 +96,16 @@ export const clearOrganizers = async () => {
         return await handleResponse(response);
     } catch (error) {
         console.error('Clear Organizers Error:', error);
+        throw error;
+    }
+};
+
+export const deleteOrganizer = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/organizers?id=${id}`, { method: 'DELETE' });
+        return await handleResponse(response);
+    } catch (error) {
+        console.error('Delete Organizer Error:', error);
         throw error;
     }
 };

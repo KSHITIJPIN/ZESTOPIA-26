@@ -248,6 +248,21 @@
     text-transform: capitalize;
 }
 
+.btn-icon-danger {
+    background: transparent;
+    border: none;
+    color: rgb(var(--text-muted));
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.btn-icon-danger:hover {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff4d4d;
+}
+
 .badge-type.solo {
     background: rgba(60, 255, 239, 0.15);
     color: rgb(var(--secondary));

@@ -30,10 +30,19 @@ export default async function handler(req, res) {
             return res.status(200).json(data);
         }
 
-        // DELETE - Clear all participants
+        // DELETE - Delete participant(s)
         if (req.method === 'DELETE') {
-            await Participant.deleteMany({});
-            return res.status(200).json({ success: true, message: 'All participants deleted' });
+            const { id } = req.query;
+
+            if (id) {
+                // Delete specific participant
+                await Participant.findByIdAndDelete(id);
+                return res.status(200).json({ success: true, message: 'Participant deleted successfully' });
+            } else {
+                // Delete all (Clear Data)
+                await Participant.deleteMany({});
+                return res.status(200).json({ success: true, message: 'All participants deleted' });
+            }
         }
 
         return res.status(405).json({ error: 'Method not allowed' });
