@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Building, Download, Trash2, ChevronRight } from 'lucide-react';
 import { eventsData } from '../data/events';
-import { getParticipants, getOrganizers, clearParticipants, clearOrganizers } from '../services/api';
+import { getParticipants, getOrganizers, clearParticipants, clearOrganizers, deleteParticipant, deleteOrganizer } from '../services/api';
 import './Admin.css';
 
 const Admin = () => {
@@ -55,6 +55,22 @@ const Admin = () => {
                 alert('All data cleared from database!');
             } catch (err) {
                 alert('Failed to clear data: ' + err.message);
+            }
+        }
+    };
+
+    const handleDelete = async (id, name) => {
+        if (confirm(`Are you sure you want to remove "${name}"?`)) {
+            try {
+                if (mainTab === 'participants') {
+                    await deleteParticipant(id);
+                    setParticipants(prev => prev.filter(p => p._id !== id));
+                } else {
+                    await deleteOrganizer(id);
+                    setOrganizers(prev => prev.filter(o => o._id !== id));
+                }
+            } catch (err) {
+                alert('Failed to delete: ' + err.message);
             }
         }
     };
@@ -176,6 +192,7 @@ const Admin = () => {
                                     <th>Class</th>
                                     <th>Type</th>
                                     <th>Time</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -208,11 +225,20 @@ const Admin = () => {
                                                 </span>
                                             </td>
                                             <td>{new Date(row.timestamp).toLocaleString()}</td>
+                                            <td>
+                                                <button
+                                                    className="btn-icon-danger"
+                                                    onClick={() => handleDelete(row._id, row.name)}
+                                                    title="Delete Entry"
+                                                >
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </td>
                                         </tr>
                                     );
                                 }) : (
                                     <tr>
-                                        <td colSpan="7" className="empty-state">No records found for "{selectedEvent}".</td>
+                                        <td colSpan="9" className="empty-state">No records found for "{selectedEvent}".</td>
                                     </tr>
                                 )}
                             </tbody>
