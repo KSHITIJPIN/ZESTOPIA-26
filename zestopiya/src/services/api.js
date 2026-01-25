@@ -12,18 +12,8 @@ export const registerParticipant = async (data) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-
-        // Handle non-JSON responses (e.g. Vercel 500 errors)
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message || 'Registration failed');
-            return result;
-        } else {
-            const text = await response.text();
-            console.error('Non-JSON response:', text);
-            throw new Error(`Server Error: ${response.status} ${response.statusText}`);
-        }
+        const result = await response.json();
+        return result;
     } catch (error) {
         console.error('Registration Error:', error);
         throw error;
@@ -59,17 +49,8 @@ export const registerOrganizer = async (data) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message || 'Registration failed');
-            return result;
-        } else {
-            const text = await response.text();
-            console.error('Non-JSON response:', text);
-            throw new Error(`Server Error: ${response.status} ${response.statusText}`);
-        }
+        const result = await response.json();
+        return result;
     } catch (error) {
         console.error('Organizer Registration Error:', error);
         throw error;
