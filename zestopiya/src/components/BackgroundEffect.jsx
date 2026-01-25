@@ -10,8 +10,11 @@ const BackgroundEffect = () => {
 
         let width, height, gridSize;
 
+        // Mobile Optimization: Reduce grid count on small screens to save GPU
+        const isMobile = window.innerWidth < 768;
+
         const config = {
-            gridCount: 10,       // Constraint: 18 squares wide
+            gridCount: isMobile ? 5 : 10,       // Constraint: 18 squares wide
             speed: 0.0025,        // Speed of the loop
             phaseStrength: 0.05, // How much the ripple delays the outer edges
             lineWidth: 1,        // Thickness of the white lines

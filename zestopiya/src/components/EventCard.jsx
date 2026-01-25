@@ -7,7 +7,13 @@ const EventCard = ({ id, title, category, date, time, location, description, ima
     return (
         <div className="event-card glass-card">
             <Link to={`/events/${id}`} className="card-link-wrapper">
-                <div className="card-image" style={{ backgroundImage: `url(${image})` }}>
+                <div className="card-image-container">
+                    <img
+                        src={image}
+                        alt={title}
+                        className="card-image-img"
+                        loading="lazy"
+                    />
                     <div className="category-tag">{category}</div>
                 </div>
                 <div className="card-content">

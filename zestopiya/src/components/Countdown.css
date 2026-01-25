@@ -117,6 +117,7 @@
 .card-flap-top.flip {
     /* Smooth mechanical easing */
     animation: flipDown 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    will-change: transform;
 }
 
 /* Animated Bottom Flap */
@@ -136,6 +137,7 @@
 
 .card-flap-bottom.flip {
     animation: flipUp 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    will-change: transform;
 }
 
 /* Keyframes */

@@ -52,14 +52,21 @@ body {
     background-position: 0% 50%;
   }
 
+
   50% {
     background-position: 100% 50%;
   }
+}
 
-  100% {
-    background-position: 0% 50%;
+/* Mobile: Disable expensive gradient animation */
+@media (max-width: 768px) {
+  .bg-animated {
+    animation: none;
+    background: rgb(var(--bg-dark));
   }
 }
+
+
 
 /* Glassmorphism Utilities */
 .glass {
@@ -68,6 +75,15 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(var(--glass-border));
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile: Reduce glass cost */
+@media (max-width: 768px) {
+  .glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(20, 20, 30, 0.9);
+  }
 }
 
 /* Standard Glass Panel Container */
@@ -80,6 +96,15 @@ body {
   border-radius: 20px;
   overflow: hidden;
   transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .glass-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(25, 25, 35, 0.95);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .glass-card {
