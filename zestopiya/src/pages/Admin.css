@@ -236,3 +236,28 @@
 .full-width {
     width: 100%;
 }
+
+.badge-type {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-transform: capitalize;
+}
+
+.badge-type.solo {
+    background: rgba(60, 255, 239, 0.15);
+    color: rgb(var(--secondary));
+    border: 1px solid rgba(60, 255, 239, 0.3);
+}
+
+.badge-type.duo,
+.badge-type.group,
+.badge-type.team {
+    background: rgba(255, 60, 172, 0.15);
+    color: rgb(var(--primary));
+    border: 1px solid rgba(255, 60, 172, 0.3);
+}

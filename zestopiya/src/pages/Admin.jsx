@@ -174,26 +174,43 @@ const Admin = () => {
                                     <th>Contact</th>
                                     <th>College</th>
                                     <th>Class</th>
+                                    <th>Type</th>
                                     <th>Time</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredData.length > 0 ? filteredData.map((row, index) => (
-                                    <tr key={row._id || index}>
-                                        <td>{filteredData.length - index}</td>
-                                        <td>
-                                            <div className="user-cell">
-                                                <span className="user-name">{row.name}</span>
-                                                <span className="user-email">{row.email}</span>
-                                            </div>
-                                        </td>
-                                        <td>{row.event || row.teamName || '-'}</td>
-                                        <td>{row.contact}</td>
-                                        <td>{row.college || '-'}</td>
-                                        <td>{row.studentClass}</td>
-                                        <td>{new Date(row.timestamp).toLocaleString()}</td>
-                                    </tr>
-                                )) : (
+                                {filteredData.length > 0 ? filteredData.map((row, index) => {
+                                    // Helper to extract "Type" based on event
+                                    const details = row.eventDetails || {};
+                                    const eventType = details.danceType ||
+                                        details.performerType ||
+                                        details.participantType ||
+                                        details.artType ||
+                                        details.type ||
+                                        (details.participantCount > 1 ? 'Group' : 'Solo');
+
+                                    return (
+                                        <tr key={row._id || index}>
+                                            <td>{filteredData.length - index}</td>
+                                            <td>
+                                                <div className="user-cell">
+                                                    <span className="user-name">{row.name}</span>
+                                                    <span className="user-email">{row.email}</span>
+                                                </div>
+                                            </td>
+                                            <td>{row.event || row.teamName || '-'}</td>
+                                            <td>{row.contact}</td>
+                                            <td>{row.college || '-'}</td>
+                                            <td>{row.studentClass}</td>
+                                            <td>
+                                                <span className={`badge-type ${eventType ? eventType.toLowerCase() : ''}`}>
+                                                    {eventType || '-'}
+                                                </span>
+                                            </td>
+                                            <td>{new Date(row.timestamp).toLocaleString()}</td>
+                                        </tr>
+                                    );
+                                }) : (
                                     <tr>
                                         <td colSpan="7" className="empty-state">No records found for "{selectedEvent}".</td>
                                     </tr>
