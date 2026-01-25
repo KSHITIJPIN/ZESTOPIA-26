@@ -63,18 +63,38 @@ const Register = () => {
         try {
             const isOrganizer = activeTab === 'organizer';
             const apiCall = isOrganizer ? registerOrganizer : registerParticipant;
-            const response = await apiCall(formData);
+
+            // Separate core fields from dynamic event fields
+            const coreFields = ['name', 'email', 'contact', 'college', 'studentClass', 'gender', 'event', 'specialReq', 'teamName', 'role'];
+            const payload = { ...formData, eventDetails: {} };
+
+            // Move dynamic fields to eventDetails
+            Object.keys(formData).forEach(key => {
+                if (!coreFields.includes(key)) {
+                    payload.eventDetails[key] = formData[key];
+                    // Clean up top-level dynamic keys if strict backend requires (optional, but cleaner)
+                    // delete payload[key]; 
+                }
+            });
+
+            console.log('Submitting Payload:', payload); // Debug log
+
+            const response = await apiCall(payload);
 
             setStatus('success');
             setToast({ message: response.message, type: 'success' });
-            // Reset core fields
-            setFormData(prev => ({
-                ...prev,
-                name: '', email: '', contact: '', specialReq: ''
-            }));
+
+            // Reset form
+            const resetState = {
+                name: '', email: '', contact: '', college: '', studentClass: '', gender: '',
+                event: '', specialReq: '', teamName: '', role: 'Volunteer'
+            };
+            setFormData(resetState);
+
         } catch (error) {
+            console.error('Registration Error:', error); // Log actual error
             setStatus('error');
-            setToast({ message: "Registration failed. Please try again.", type: 'error' });
+            setToast({ message: error.message || "Registration failed. Please try again.", type: 'error' });
         }
 
         setTimeout(() => setStatus('idle'), 2000);
