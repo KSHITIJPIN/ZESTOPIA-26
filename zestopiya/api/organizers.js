@@ -26,7 +26,10 @@ export default async function handler(req, res) {
 
         // GET - Get all organizers
         if (req.method === 'GET') {
-            const data = await Organizer.find().sort({ timestamp: -1 });
+            const { deleted } = req.query;
+            const filter = deleted === 'true' ? { isDeleted: true } : { isDeleted: false };
+
+            const data = await Organizer.find(filter).sort({ timestamp: -1 });
             return res.status(200).json(data);
         }
 

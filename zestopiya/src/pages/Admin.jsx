@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Building, Download, Trash2, ChevronRight } from 'lucide-react';
+import { Users, Building, Download, Trash2, ChevronRight, RefreshCw, RotateCcw } from 'lucide-react';
 import { eventsData } from '../data/events';
-import { getParticipants, getOrganizers, clearParticipants, clearOrganizers, deleteParticipant, deleteOrganizer } from '../services/api';
+import { getParticipants, getOrganizers, clearParticipants, clearOrganizers, deleteParticipant, deleteOrganizer, triggerManualCleanup, restoreRecord } from '../services/api';
 import './Admin.css';
 
 const Admin = () => {
-    const [mainTab, setMainTab] = useState('participants');
+    const [mainTab, setMainTab] = useState('participants'); // 'participants', 'organizers', 'trash'
     const [selectedEvent, setSelectedEvent] = useState('All');
     const [participants, setParticipants] = useState([]);
     const [organizers, setOrganizers] = useState([]);
+    const [deletedItems, setDeletedItems] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,10 +21,21 @@ const Admin = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const pData = await getParticipants();
-            const oData = await getOrganizers();
-            setParticipants(Array.isArray(pData) ? pData : []);
-            setOrganizers(Array.isArray(oData) ? oData : []);
+            if (mainTab === 'trash') {
+                const pDeleted = await getParticipants(true); // fetch deleted
+                const oDeleted = await getOrganizers(true);
+                // Combine and add type
+                const combined = [
+                    ...pDeleted.map(i => ({ ...i, type: 'participant' })),
+                    ...oDeleted.map(i => ({ ...i, type: 'organizer' }))
+                ];
+                setDeletedItems(combined.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt)));
+            } else {
+                const pData = await getParticipants();
+                const oData = await getOrganizers();
+                setParticipants(Array.isArray(pData) ? pData : []);
+                setOrganizers(Array.isArray(oData) ? oData : []);
+            }
         } catch (err) {
             console.error('Failed to fetch data:', err);
         }
@@ -34,7 +46,7 @@ const Admin = () => {
         if (isAuthenticated) {
             fetchData();
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, mainTab]);
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -42,6 +54,32 @@ const Admin = () => {
             setIsAuthenticated(true);
         } else {
             alert('Invalid Username or Password');
+        }
+    };
+
+    const runCleanup = async () => {
+        if (confirm('Run automated cleanup? This will detect and delete invalid/duplicate emails.')) {
+            setLoading(true);
+            try {
+                // Use a proper secret in production, for now just trigger
+                const result = await triggerManualCleanup(process.env.CRON_SECRET || '');
+                alert(`Cleanup Complete.\nRecords Removed: ${result.deletedCount || 0}`);
+                fetchData();
+            } catch (err) {
+                alert('Cleanup Failed: ' + err.message);
+            }
+            setLoading(false);
+        }
+    };
+
+    const handleRestore = async (id, type) => {
+        if (confirm('Restore this record?')) {
+            try {
+                await restoreRecord(id, type);
+                setDeletedItems(prev => prev.filter(i => i._id !== id));
+            } catch (err) {
+                alert('Restore failed: ' + err.message);
+            }
         }
     };
 
@@ -76,6 +114,7 @@ const Admin = () => {
     };
 
     const getFilteredData = () => {
+        if (mainTab === 'trash') return deletedItems;
         const data = mainTab === 'participants' ? participants : organizers;
         if (selectedEvent === 'All') return data;
         return data.filter(item => item.event === selectedEvent);
@@ -138,7 +177,10 @@ const Admin = () => {
                     <button className="btn btn-secondary" onClick={fetchData} disabled={loading}>
                         {loading ? 'Loading...' : '🔄 Refresh'}
                     </button>
-                    <button className="btn btn-ghost" onClick={clearData}><Trash2 size={18} /> Clear Data</button>
+                    <button className="btn btn-ghost" onClick={runCleanup} disabled={loading} title="Find & remove bad emails">
+                        <RefreshCw size={18} /> Auto-Cleanup
+                    </button>
+                    <button className="btn btn-ghost" onClick={clearData}><Trash2 size={18} /> Reset DB</button>
                     <button className="btn btn-primary" onClick={downloadCSV}><Download size={18} /> Export CSV</button>
                 </div>
             </div>
@@ -156,6 +198,13 @@ const Admin = () => {
                         onClick={() => { setMainTab('organizers'); setSelectedEvent('All'); }}
                     >
                         <Building size={18} /> Organizers ({organizers.length})
+                    </button>
+                    <button
+                        className={`tab-btn ${mainTab === 'trash' ? 'active' : ''}`}
+                        onClick={() => { setMainTab('trash'); setSelectedEvent('All'); }}
+                        style={{ color: '#ff6b6b' }}
+                    >
+                        <Trash2 size={18} /> Trash ({deletedItems.length})
                     </button>
                 </div>
 
@@ -188,10 +237,11 @@ const Admin = () => {
                                     <th>Name</th>
                                     <th>Event</th>
                                     <th>Contact</th>
-                                    <th>College</th>
-                                    <th>Class</th>
-                                    <th>Type</th>
-                                    <th>Time</th>
+                                    {mainTab !== 'trash' && <th>Class</th>}
+                                    {mainTab !== 'trash' && <th>Type</th>}
+                                    {mainTab === 'trash' && <th>Deletion Reason</th>}
+                                    {mainTab === 'trash' && <th>Deleted At</th>}
+                                    {mainTab !== 'trash' && <th>Time</th>}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -206,8 +256,11 @@ const Admin = () => {
                                         details.type ||
                                         (details.participantCount > 1 ? 'Group' : 'Solo');
 
+                                    const isTrash = mainTab === 'trash';
+                                    const meta = row.deletionMetadata || {};
+
                                     return (
-                                        <tr key={row._id || index}>
+                                        <tr key={row._id || index} className={isTrash ? 'trash-row' : ''}>
                                             <td>{filteredData.length - index}</td>
                                             <td>
                                                 <div className="user-cell">
@@ -215,24 +268,47 @@ const Admin = () => {
                                                     <span className="user-email">{row.email}</span>
                                                 </div>
                                             </td>
-                                            <td>{row.event || row.teamName || '-'}</td>
+                                            <td>{row.event || row.teamName || (row.type === 'organizer' ? 'Organizer' : '-')}</td>
                                             <td>{row.contact}</td>
-                                            <td>{row.college || '-'}</td>
-                                            <td>{row.studentClass}</td>
+
+                                            {!isTrash && <td>{row.studentClass || '-'}</td>}
+                                            {!isTrash && (
+                                                <td>
+                                                    <span className={`badge-type ${eventType ? eventType.toLowerCase() : ''}`}>
+                                                        {eventType || '-'}
+                                                    </span>
+                                                </td>
+                                            )}
+
+                                            {isTrash && (
+                                                <td>
+                                                    <span className="deletion-reason">
+                                                        {meta.reason || 'Manual Delete'}
+                                                    </span>
+                                                </td>
+                                            )}
+                                            {isTrash && <td>{new Date(row.deletedAt).toLocaleString()}</td>}
+
+                                            {!isTrash && <td>{new Date(row.timestamp).toLocaleString()}</td>}
+
                                             <td>
-                                                <span className={`badge-type ${eventType ? eventType.toLowerCase() : ''}`}>
-                                                    {eventType || '-'}
-                                                </span>
-                                            </td>
-                                            <td>{new Date(row.timestamp).toLocaleString()}</td>
-                                            <td>
-                                                <button
-                                                    className="btn-icon-danger"
-                                                    onClick={() => handleDelete(row._id, row.name)}
-                                                    title="Delete Entry"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
+                                                {isTrash ? (
+                                                    <button
+                                                        className="btn-icon-restore"
+                                                        onClick={() => handleRestore(row._id, row.type || 'participant')}
+                                                        title="Restore Record"
+                                                    >
+                                                        <RotateCcw size={18} />
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        className="btn-icon-danger"
+                                                        onClick={() => handleDelete(row._id, row.name)}
+                                                        title="Delete Entry"
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                )}
                                             </td>
                                         </tr>
                                     );

@@ -58,7 +58,10 @@ export default async function handler(req, res) {
 
         // GET - Get all participants
         if (req.method === 'GET') {
-            const data = await Participant.find().sort({ timestamp: -1 });
+            const { deleted } = req.query;
+            const filter = deleted === 'true' ? { isDeleted: true } : { isDeleted: false };
+
+            const data = await Participant.find(filter).sort({ timestamp: -1 });
             return res.status(200).json(data);
         }
 

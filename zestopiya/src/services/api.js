@@ -34,9 +34,10 @@ export const registerParticipant = async (data) => {
     }
 };
 
-export const getParticipants = async () => {
+export const getParticipants = async (deleted = false) => {
     try {
-        const response = await fetch(`${API_URL}/participants`);
+        const query = deleted ? '?deleted=true' : '';
+        const response = await fetch(`${API_URL}/participants${query}`);
         return await handleResponse(response);
     } catch (error) {
         console.error('Fetch Participants Error:', error);
@@ -80,9 +81,10 @@ export const registerOrganizer = async (data) => {
     }
 };
 
-export const getOrganizers = async () => {
+export const getOrganizers = async (deleted = false) => {
     try {
-        const response = await fetch(`${API_URL}/organizers`);
+        const query = deleted ? '?deleted=true' : '';
+        const response = await fetch(`${API_URL}/organizers${query}`);
         return await handleResponse(response);
     } catch (error) {
         console.error('Fetch Organizers Error:', error);
@@ -119,5 +121,34 @@ export const getStats = async () => {
     } catch (error) {
         console.error('Fetch Stats Error:', error);
         return { participants: 0, organizers: 0 };
+    }
+};
+
+// ============ CLEANUP & AUDIT ============
+
+export const triggerManualCleanup = async (token) => {
+    try {
+        const response = await fetch(`${API_URL}/cron/cleanup`, {
+            method: 'GET', // Vercel Cron usually GET
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        return await handleResponse(response);
+    } catch (error) {
+        console.error('Manual Cleanup Error:', error);
+        throw error;
+    }
+};
+
+export const restoreRecord = async (id, type) => {
+    try {
+        const response = await fetch(`${API_URL}/admin/restore`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, type })
+        });
+        return await handleResponse(response);
+    } catch (error) {
+        console.error('Restore Error:', error);
+        throw error;
     }
 };
