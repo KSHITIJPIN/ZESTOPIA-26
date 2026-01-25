@@ -4,16 +4,27 @@ let isConnected = false;
 
 const connectDB = async () => {
     if (isConnected) {
+        console.log('=> Using existing database connection');
         return;
     }
 
+    console.log('=> Connecting to database...');
+    // Log if URI exists (don't log the actual secret!)
+    console.log('=> MONGODB_URI is set:', !!process.env.MONGODB_URI);
+
+    if (!process.env.MONGODB_URI) {
+        throw new Error('MONGODB_URI environment variable is missing!');
+    }
+
     try {
-        const db = await mongoose.connect(process.env.MONGODB_URI);
+        const db = await mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000, // Fail fast if no connection
+        });
         isConnected = db.connections[0].readyState === 1;
-        console.log('✅ MongoDB connected');
+        console.log('✅ MongoDB connected successfully');
     } catch (error) {
         console.error('❌ MongoDB connection error:', error);
-        throw error;
+        throw error; // This will cause the 500
     }
 };
 
