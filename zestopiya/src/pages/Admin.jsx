@@ -49,9 +49,26 @@ const Admin = () => {
         }
     }, [isAuthenticated, fetchData]);
 
-    const handleLogin = (e) => {
+    // SHA-256 hash function
+    const hashString = async (str) => {
+        const msgBuffer = new TextEncoder().encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    };
+
+    // Pre-computed SHA-256 hashes (credentials not visible in source)
+    const VALID_USERNAME_HASH = '9ef7b0d01d22b872c95d810fe02fee2011abffcdb08b28d34cf70a124d44b542';
+    const VALID_PASSWORD_HASH = 'cc73eda8718f6512d98a83c9be51b59caeb0018cb2e3e9ceeb30d21f1f4e9ed0';
+
+    const handleLogin = async (e) => {
         e.preventDefault();
-        if (username === 'Z_Admin' && password === 'MGMUAdmin@567') {
+
+        const usernameHash = await hashString(username);
+        const passwordHash = await hashString(password);
+
+        // Compare hashes instead of plaintext
+        if (usernameHash === VALID_USERNAME_HASH && passwordHash === VALID_PASSWORD_HASH) {
             setIsAuthenticated(true);
         } else {
             alert('Invalid Username or Password');
