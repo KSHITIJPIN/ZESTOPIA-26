@@ -56,8 +56,20 @@ app.get('/api/health', (req, res) => {
 // --- PARTICIPANTS ---
 
 // Register new participant
+// Register new participant
 app.post('/api/participants', async (req, res) => {
     try {
+        const { email, event } = req.body;
+
+        // Check if user already registered for this specific event
+        const existingParticipant = await Participant.findOne({ email, event });
+        if (existingParticipant) {
+            return res.status(400).json({
+                success: false,
+                message: 'You have already registered for this event!'
+            });
+        }
+
         const participant = new Participant({
             ...req.body,
             timestamp: new Date()
