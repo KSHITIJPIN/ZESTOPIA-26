@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Building, Download, Trash2, ChevronRight, RefreshCw, RotateCcw } from 'lucide-react';
+import { Users, Building, Download, Trash2, ChevronRight, RefreshCw, RotateCcw, LogOut } from 'lucide-react';
 import { eventsData } from '../data/events';
 import { getParticipants, getOrganizers, clearParticipants, clearOrganizers, deleteParticipant, deleteOrganizer, triggerManualCleanup, restoreRecord } from '../services/api';
 import './Admin.css';
@@ -183,6 +183,9 @@ const Admin = () => {
                     </button>
                     <button className="btn btn-ghost" onClick={clearData}><Trash2 size={18} /> Reset DB</button>
                     <button className="btn btn-primary" onClick={downloadCSV}><Download size={18} /> Export CSV</button>
+                    <button className="btn btn-secondary" onClick={() => setIsAuthenticated(false)} style={{ background: 'rgba(255, 107, 107, 0.2)', color: '#ff6b6b', borderColor: 'rgba(255, 107, 107, 0.3)' }}>
+                        <LogOut size={18} /> Logout
+                    </button>
                 </div>
             </div>
 
@@ -238,6 +241,7 @@ const Admin = () => {
                                     <th>Name</th>
                                     <th>Event</th>
                                     <th>Contact</th>
+                                    {mainTab !== 'trash' && <th>Department</th>}
                                     {mainTab !== 'trash' && <th>Class</th>}
                                     {mainTab !== 'trash' && <th>Type</th>}
                                     {mainTab === 'trash' && <th>Deletion Reason</th>}
@@ -272,6 +276,7 @@ const Admin = () => {
                                             <td>{row.event || row.teamName || (row.type === 'organizer' ? 'Organizer' : '-')}</td>
                                             <td>{row.contact}</td>
 
+                                            {!isTrash && <td>{row.college || row.department || '-'}</td>}
                                             {!isTrash && <td>{row.studentClass || '-'}</td>}
                                             {!isTrash && (
                                                 <td>
