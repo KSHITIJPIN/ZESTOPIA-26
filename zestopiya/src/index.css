@@ -45,6 +45,7 @@ body {
       rgba(var(--secondary), 0.15));
   background-size: 400% 400%;
   animation: gradient-shift 30s ease infinite;
+  will-change: background-position;
 }
 
 @keyframes gradient-shift {

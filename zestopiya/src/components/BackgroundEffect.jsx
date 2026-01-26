@@ -65,6 +65,13 @@ const BackgroundEffect = () => {
             const cols = Math.ceil(width / gridSize) + 4;
             const rows = Math.ceil(height / gridSize) + 4;
 
+            // Batch 1: Draw all static grid lines in ONE draw call
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = config.lineWidth;
+
+            const ripples = []; // Store active ripples to draw later
+
             for (let i = -cols / 2; i <= cols / 2; i++) {
                 for (let j = -rows / 2; j <= rows / 2; j++) {
                     const x0 = i * gridSize;
@@ -82,10 +89,29 @@ const BackgroundEffect = () => {
                     const size = gridSize * scale;
 
                     if (x > -size && x < width + size && y > -size && y < height + size) {
-                        drawCell(x, y, size, easedT);
+                        const half = size / 2;
+                        // Add to static batch
+                        ctx.rect(x - half, y - half, size, size);
+
+                        // If active ripple, store for second pass
+                        if (easedT > 0.01) {
+                            ripples.push({ x, y, half, opacity: easedT });
+                        }
                     }
                 }
             }
+            ctx.stroke(); // Draw all static lines at once
+
+            // Batch 2: Draw active ripples (these need individual colors/opacity)
+            ripples.forEach(r => {
+                ctx.beginPath();
+                ctx.moveTo(r.x, r.y - r.half);
+                ctx.lineTo(r.x, r.y + r.half);
+                ctx.moveTo(r.x - r.half, r.y);
+                ctx.lineTo(r.x + r.half, r.y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${r.opacity})`;
+                ctx.stroke();
+            });
 
             time += config.speed;
             animationFrameId = requestAnimationFrame(animate);
