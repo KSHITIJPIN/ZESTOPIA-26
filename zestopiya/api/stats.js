@@ -18,8 +18,8 @@ export default async function handler(req, res) {
     try {
         await connectDB();
 
-        const participantCount = await Participant.countDocuments();
-        const organizerCount = await Organizer.countDocuments();
+        const participantCount = await Participant.countDocuments({ isDeleted: false });
+        const organizerCount = await Organizer.countDocuments({ isDeleted: false });
 
         return res.status(200).json({
             participants: participantCount,
