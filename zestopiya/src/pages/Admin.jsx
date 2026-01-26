@@ -18,7 +18,7 @@ const Admin = () => {
     const eventNames = ['All', ...eventsData.map(e => e.title)];
 
     // Fetch data from MongoDB API
-    const fetchData = async () => {
+    const fetchData = React.useCallback(async () => {
         setLoading(true);
         try {
             if (mainTab === 'trash') {
@@ -40,13 +40,14 @@ const Admin = () => {
             console.error('Failed to fetch data:', err);
         }
         setLoading(false);
-    };
+    }, [mainTab]);
 
     useEffect(() => {
         if (isAuthenticated) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchData();
         }
-    }, [isAuthenticated, mainTab]);
+    }, [isAuthenticated, fetchData]);
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -62,7 +63,7 @@ const Admin = () => {
             setLoading(true);
             try {
                 // Use a proper secret in production, for now just trigger
-                const result = await triggerManualCleanup(process.env.CRON_SECRET || '');
+                const result = await triggerManualCleanup(import.meta.env.VITE_CRON_SECRET || '');
                 alert(`Cleanup Complete.\nRecords Removed: ${result.deletedCount || 0}`);
                 fetchData();
             } catch (err) {

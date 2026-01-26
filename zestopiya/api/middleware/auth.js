@@ -1,4 +1,6 @@
+/* eslint-env node */
 // Basic Authorization Middleware for Cron Jobs
+const jwt = require('jsonwebtoken');
 export const verifyCronSecret = (req) => {
     const authHeader = req.headers.get ? req.headers.get('authorization') : req.headers.authorization;
 

@@ -1,7 +1,7 @@
 // Zestopia API Service - Connects to MongoDB Backend
 
 // Use relative path for Vercel, or localhost for local development
-const API_URL = import.meta.env.DEV ? 'http://localhost:5000/api' : '/api';
+const API_URL = import.meta.env.DEV ? 'http://localhost:5001/api' : '/api';
 
 // ============ PARTICIPANTS ============
 

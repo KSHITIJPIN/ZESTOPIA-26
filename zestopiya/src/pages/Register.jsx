@@ -40,11 +40,36 @@ const Register = () => {
     const [toast, setToast] = useState(null);
 
     useEffect(() => {
-        setFormData(prev => ({ ...prev, event: eventParam }));
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setFormData(prev => {
+            if (prev.event === eventParam) return prev;
+            return { ...prev, event: eventParam };
+        });
     }, [eventParam]);
+
+    // Department -> Class Mapping
+    const departmentClassMap = {
+        "Integrated": ["FE (I) – I", "FE (I) – II"],
+        "ICBT Regular": ["FE", "SE", "TE"],
+        "CSE Integrated": ["SE (I) CSE", "TE (I) CSE", "FO (I) CSE"],
+        "Robotics & Ai": ["SE (I) R & AI", "TE (I) R & AI", "FO (I) R & AI", "SE R & A"],
+        "Civil": ["SE (I) Civil", "TE (I) Civil"]
+    };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+
+        // Handle Department change specially to reset Class
+        if (name === 'department') {
+            setFormData(prev => ({
+                ...prev,
+                department: value,
+                studentClass: '', // Reset class when department changes
+                college: value // Keeping college synced with department for now if backend needs it, or strictly use department
+            }));
+            return;
+        }
+
         setFormData(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
@@ -65,15 +90,14 @@ const Register = () => {
             const apiCall = isOrganizer ? registerOrganizer : registerParticipant;
 
             // Separate core fields from dynamic event fields
-            const coreFields = ['name', 'email', 'contact', 'college', 'studentClass', 'gender', 'event', 'specialReq', 'teamName', 'role'];
+            // Added 'department' to core fields
+            const coreFields = ['name', 'email', 'contact', 'college', 'department', 'studentClass', 'gender', 'event', 'specialReq', 'teamName', 'role'];
             const payload = { ...formData, eventDetails: {} };
 
             // Move dynamic fields to eventDetails
             Object.keys(formData).forEach(key => {
                 if (!coreFields.includes(key)) {
                     payload.eventDetails[key] = formData[key];
-                    // Clean up top-level dynamic keys if strict backend requires (optional, but cleaner)
-                    // delete payload[key]; 
                 }
             });
 
@@ -86,7 +110,7 @@ const Register = () => {
 
             // Reset form
             const resetState = {
-                name: '', email: '', contact: '', college: '', studentClass: '', gender: '',
+                name: '', email: '', contact: '', college: '', department: '', studentClass: '', gender: '',
                 event: '', specialReq: '', teamName: '', role: 'Volunteer'
             };
             setFormData(resetState);
@@ -141,43 +165,61 @@ const Register = () => {
                     <h3 className="form-section-title">Personal Details</h3>
                     <div className="form-group">
                         <label><User size={20} /> Full Name / Leader Name</label>
-                        <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="John Doe" />
+                        <input type="text" name="name" required value={formData.name} onChange={handleChange} />
                     </div>
 
                     <div className="row">
                         <div className="form-group">
                             <label><Mail size={20} /> Email Address</label>
-                            <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="john@college.edu" />
+                            <input type="email" name="email" required value={formData.email} onChange={handleChange} />
                         </div>
                         <div className="form-group">
                             <label><CreditCard size={20} /> Contact Number</label>
-                            <input type="tel" name="contact" required value={formData.contact} onChange={handleChange} placeholder="+91 98765 43210" />
+                            <div className="input-group">
+                                <span className="input-prefix">+91</span>
+                                <input
+                                    type="tel"
+                                    name="contact"
+                                    required
+                                    value={formData.contact}
+                                    onChange={(e) => {
+                                        const val = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                                        if (val.length <= 10) {
+                                            setFormData(prev => ({ ...prev, contact: val }));
+                                        }
+                                    }}
+                                    placeholder=""
+                                    pattern="[0-9]{10}"
+                                    title="Please enter exactly 10 digits"
+                                />
+                            </div>
                         </div>
                     </div>
 
                     <div className="row">
                         <div className="form-group">
-                            <label><Building size={20} /> College / Department</label>
-                            <input type="text" name="college" required value={formData.college} onChange={handleChange} placeholder="e.g. COEP / CSE" />
+                            <label><Building size={20} /> Department</label>
+                            <select name="department" required value={formData.department || ''} onChange={handleChange}>
+                                <option value="">Select Department</option>
+                                {Object.keys(departmentClassMap).map(dept => (
+                                    <option key={dept} value={dept}>{dept}</option>
+                                ))}
+                            </select>
                         </div>
                         <div className="form-group">
                             <label><Users size={20} /> Class / Year</label>
-                            <select name="studentClass" required value={formData.studentClass} onChange={handleChange}>
-                                <option value="">Select Class</option>
-                                <option value="FE (I) – I">FE (I) – I</option>
-                                <option value="FE (I) – II">FE (I) – II</option>
-                                <option value="FE">FE</option>
-                                <option value="SE (I) CSE">SE (I) CSE</option>
-                                <option value="TE (I) CSE">TE (I) CSE</option>
-                                <option value="FO (I) CSE">FO (I) CSE</option>
-                                <option value="SE CSE">SE CSE</option>
-                                <option value="TE CSE">TE CSE</option>
-                                <option value="SE (I) R & AI">SE (I) R & AI</option>
-                                <option value="TE (I) R & AI">TE (I) R & AI</option>
-                                <option value="FO (I) R & AI">FO (I) R & AI</option>
-                                <option value="SE R & A">SE R & A</option>
-                                <option value="SE (I) Civil">SE (I) Civil</option>
-                                <option value="TE (I) Civil">TE (I) Civil</option>
+                            <select
+                                name="studentClass"
+                                required
+                                value={formData.studentClass}
+                                onChange={handleChange}
+                                disabled={!formData.department}
+                                className={!formData.department ? 'disabled-input' : ''}
+                            >
+                                <option value="">{formData.department ? "Select Class" : "Select Department first"}</option>
+                                {formData.department && departmentClassMap[formData.department]?.map(cls => (
+                                    <option key={cls} value={cls}>{cls}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -268,13 +310,11 @@ const Register = () => {
                         </div>
                     )}
 
-                    {/* --- ORGANIZER SPECIFIC --- */}
-                    {isOrganizer && (
-                        <div className="form-group">
-                            <label>Team Name (Optional)</label>
-                            <input type="text" name="teamName" value={formData.teamName} onChange={handleChange} placeholder="Alpha Squad" />
-                        </div>
-                    )}
+                    {/* Team Name - Available for both now */}
+                    <div className="form-group">
+                        <label>Team Name {isOrganizer ? '' : '(Optional)'}</label>
+                        <input type="text" name="teamName" value={formData.teamName} onChange={handleChange} placeholder={isOrganizer ? "Alpha Squad" : "Enter Team Name if applicable"} />
+                    </div>
 
                     <div className="form-group">
                         <label>Any Special Requirement (Optional)</label>

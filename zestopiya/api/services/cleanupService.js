@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+/* eslint-env node */
+const mongoose = require('mongoose');
 import { Participant, Organizer, AuditLog, connectDB } from '../_db.js';
 
 // --- Logic ---
@@ -6,10 +7,6 @@ import { Participant, Organizer, AuditLog, connectDB } from '../_db.js';
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
-};
-
-const normalizeEmail = (email) => {
-    return email ? email.trim().toLowerCase() : '';
 };
 
 // --- Core Service ---

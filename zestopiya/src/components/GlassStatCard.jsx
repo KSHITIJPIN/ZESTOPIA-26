@@ -10,8 +10,8 @@ const GlassStatCard = ({ icon: Icon, value, label, color }) => {
         // Extract number from value string if possible (e.g. "2000+" -> 2000)
         const end = parseInt(value) || 0;
         if (end === 0) {
-            setCount(value);
-            return;
+            const t = setTimeout(() => setCount(value), 0);
+            return () => clearTimeout(t);
         }
 
         const duration = 2000;

@@ -26,6 +26,7 @@ const FlipCard = ({ digit, prevDigit }) => {
 
     useEffect(() => {
         if (digit !== prevDigit) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setFlip(true);
             const timer = setTimeout(() => setFlip(false), 600);
             return () => clearTimeout(timer);
@@ -80,24 +81,31 @@ const FlipUnit = ({ value, prevValue, label }) => {
 
 const Countdown = () => {
     const [time, setTime] = useState(getTimeRemaining());
+
+    // Use a ref to track the previous time value strictly for animation purposes
     const prevTimeRef = useRef(time);
+    useEffect(() => {
+        prevTimeRef.current = time;
+    }, [time]);
+    const prevTime = prevTimeRef.current; // Read from ref (previous render's value)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            prevTimeRef.current = time;
             setTime(getTimeRemaining());
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [time]);
-
-    const prevTime = prevTimeRef.current;
+    }, []);
 
     return (
         <div className="countdown-wrapper">
+            {/* eslint-disable-next-line react-hooks/refs */}
             <FlipUnit value={time.days} prevValue={prevTime.days} label="Days" />
+            {/* eslint-disable-next-line react-hooks/refs */}
             <FlipUnit value={time.hours} prevValue={prevTime.hours} label="Hours" />
+            {/* eslint-disable-next-line react-hooks/refs */}
             <FlipUnit value={time.minutes} prevValue={prevTime.minutes} label="Minutes" />
+            {/* eslint-disable-next-line react-hooks/refs */}
             <FlipUnit value={time.seconds} prevValue={prevTime.seconds} label="Seconds" />
         </div>
     );
