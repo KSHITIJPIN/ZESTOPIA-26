@@ -16,8 +16,16 @@ export default async function handler(req, res) {
 
         // POST - Register new organizer
         if (req.method === 'POST') {
+            const formData = req.body;
+
+            // Validate contact number (exactly 10 digits)
+            const contact = formData.contact ? formData.contact.replace(/\D/g, '') : '';
+            if (contact.length !== 10) {
+                return res.status(400).json({ success: false, message: 'Contact number must be exactly 10 digits.' });
+            }
+
             const organizer = new Organizer({
-                ...req.body,
+                ...formData,
                 timestamp: new Date()
             });
             await organizer.save();

@@ -26,6 +26,12 @@ export default async function handler(req, res) {
                 return res.status(400).json({ success: false, message: 'Name and Email are required.' });
             }
 
+            // 2. Contact Number Validation (exactly 10 digits)
+            const contact = formData.contact ? formData.contact.replace(/\D/g, '') : '';
+            if (contact.length !== 10) {
+                return res.status(400).json({ success: false, message: 'Contact number must be exactly 10 digits.' });
+            }
+
             // 2. Check Duplicate (Active only)
             // Note: DB unique index handles global uniqueness, but this gives better error msg
             const existing = await Participant.findOne({
