@@ -35,10 +35,14 @@ const Footer = () => {
                 <div className="footer-section contact-section">
                     <h4>Contact Us</h4>
                     <div className="contact-item">
-                        <Mail size={16} /> <span>richa24bagdiya@gmail.com</span>
+                        <a href="mailto:richa24bagdiya@gmail.com" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'inherit', textDecoration: 'none' }}>
+                            <Mail size={16} /> <span>richa24bagdiya@gmail.com</span>
+                        </a>
                     </div>
                     <div className="contact-item">
-                        <Mail size={16} /> <span>diyachuphal19@gmail.com</span>
+                        <a href="mailto:diyachuphal19@gmail.com" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'inherit', textDecoration: 'none' }}>
+                            <Mail size={16} /> <span>diyachuphal19@gmail.com</span>
+                        </a>
                     </div>
                     <div className="contact-item">
                         <Phone size={16} /> <span>+91 9028616517 Richa Bagdiya</span>
