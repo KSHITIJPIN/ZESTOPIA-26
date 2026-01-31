@@ -18,10 +18,10 @@ export default async function handler(req, res) {
         if (req.method === 'POST') {
             const formData = req.body;
 
-            // Normalize email if provided (optional)
+            // Normalize
             const normalizedEmail = formData.email ? formData.email.trim().toLowerCase() : '';
 
-            // 1. Basic Validation - Only name is required, email is optional
+            // 1. Basic Validation
             if (!formData.name) {
                 return res.status(400).json({ success: false, message: 'Name is required.' });
             }
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
                 return res.status(400).json({ success: false, message: 'Contact number must be exactly 10 digits.' });
             }
 
-            // 3. Check Duplicate using contact number and event (Active only)
+            // 2. Check Duplicate (Active only) - Using contact number
             const existing = await Participant.findOne({
                 contact: contact,
                 event: formData.event,
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
             });
 
             if (existing) {
-                return res.status(409).json({ success: false, message: 'You have already registered for this event!' });
+                return res.status(409).json({ success: false, message: 'This contact number is already registered for this event!' });
             }
 
             const participant = new Participant({
