@@ -85,9 +85,17 @@ export const eventFormConfig = {
         { name: "propsReq", label: "Props / Instrument Req", type: "text", required: false },
         { name: "rulesNotice", label: "Rules: Foul language is strictly prohibited.", type: "notice" }
     ],
-    "Bollywood Day / Mismatch Day": [
-        { name: "themeSelected", label: "Theme Selected", type: "select", options: ["Bollywood", "Mismatch"], required: true },
-        { name: "outfitDesc", label: "Character / Outfit Desc", type: "text", required: true },
-        { name: "participantType", label: "Type", type: "select", options: ["Solo", "Group"], required: true }
+    "Bollywood Day": [
+        { name: "characterName", label: "Bollywood Character Name", type: "text", required: true },
+        { name: "movieReference", label: "Movie Reference", type: "text", required: true },
+        { name: "outfitDesc", label: "Costume Description", type: "text", required: true },
+        { name: "participantType", label: "Type", type: "select", options: ["Solo", "Group"], required: true },
+        { name: "participantCount", label: "No. of Participants", type: "number", required: true, condition: (formData) => formData.participantType === 'Group' }
+    ],
+    "Mismatch Day": [
+        { name: "mismatchElements", label: "Mismatch Elements Used", type: "text", required: true },
+        { name: "outfitDesc", label: "Describe Your Mismatch Outfit", type: "text", required: true },
+        { name: "participantType", label: "Type", type: "select", options: ["Solo", "Group"], required: true },
+        { name: "participantCount", label: "No. of Participants", type: "number", required: true, condition: (formData) => formData.participantType === 'Group' }
     ]
 };

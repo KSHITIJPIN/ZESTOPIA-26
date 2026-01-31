@@ -219,21 +219,42 @@ export const eventsData = [
     },
     {
         id: 12,
-        title: "Bollywood Day / Mismatch Day",
+        title: "Bollywood Day",
         category: "Cultural",
         date: "7th Feb",
         time: "All Day",
         location: "SOET Building",
-        description: "Dress up as your favorite Bollywood character or mix it up in the craziest way!",
+        description: "Dress up as your favorite Bollywood character and relive the magic of Indian cinema!",
         image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=800",
-        longDescription: "A day of cosplay and chaos. Come as a superhero, a cartoon, or just wear your clothes inside out.",
+        longDescription: "Step into the world of Bollywood! Come dressed as your favorite movie character, iconic hero, or legendary villain. From Shah Rukh Khan's signature arms wide open pose to Amitabh Bachchan's classic style - show us your best Bollywood avatar!",
         rules: [
             "No masks that fully cover the face (security reasons).",
-            "Maintain decency."
+            "Maintain decency.",
+            "Costumes should represent recognizable Bollywood characters."
         ],
         contact: {
             name: "Discipline Committee",
             phone: "+91 98765 67890"
+        }
+    },
+    {
+        id: 16,
+        title: "Mismatch Day",
+        category: "Cultural",
+        date: "7th Feb",
+        time: "All Day",
+        location: "SOET Building",
+        description: "Mix it up in the craziest way with mismatched outfits and wild combinations!",
+        image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&q=80&w=800",
+        longDescription: "The crazier, the better! Wear mismatched socks, opposite shoes, inside-out clothes, or the wildest color combinations. This is your chance to break all fashion rules and have fun doing it!",
+        rules: [
+            "No masks that fully cover the face (security reasons).",
+            "Maintain decency.",
+            "Be creative with your mismatched outfit!"
+        ],
+        contact: {
+            name: "Discipline Committee",
+            phone: "+91 98765 67891"
         }
     },
     {
