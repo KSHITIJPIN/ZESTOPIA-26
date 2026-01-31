@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
-import { User, Mail, CreditCard, Building, AppWindow, Users, Shield } from 'lucide-react';
+import { User, CreditCard, Building, AppWindow, Users, Shield } from 'lucide-react';
 import { registerParticipant, registerOrganizer } from '../services/api';
 import Toast from '../components/Toast';
 import { eventFormConfig } from '../data/formConfig';
@@ -168,31 +168,25 @@ const Register = () => {
                         <input type="text" name="name" required value={formData.name} onChange={handleChange} />
                     </div>
 
-                    <div className="row">
-                        <div className="form-group">
-                            <label><Mail size={20} /> Email Address</label>
-                            <input type="email" name="email" required value={formData.email} onChange={handleChange} />
-                        </div>
-                        <div className="form-group">
-                            <label><CreditCard size={20} /> Contact Number</label>
-                            <div className="input-group">
-                                <span className="input-prefix">+91</span>
-                                <input
-                                    type="tel"
-                                    name="contact"
-                                    required
-                                    value={formData.contact}
-                                    onChange={(e) => {
-                                        const val = e.target.value.replace(/\D/g, ''); // Remove non-digits
-                                        if (val.length <= 10) {
-                                            setFormData(prev => ({ ...prev, contact: val }));
-                                        }
-                                    }}
-                                    placeholder=""
-                                    pattern="[0-9]{10}"
-                                    title="Please enter exactly 10 digits"
-                                />
-                            </div>
+                    <div className="form-group">
+                        <label><CreditCard size={20} /> Contact Number</label>
+                        <div className="input-group">
+                            <span className="input-prefix">+91</span>
+                            <input
+                                type="tel"
+                                name="contact"
+                                required
+                                value={formData.contact}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                                    if (val.length <= 10) {
+                                        setFormData(prev => ({ ...prev, contact: val }));
+                                    }
+                                }}
+                                placeholder=""
+                                pattern="[0-9]{10}"
+                                title="Please enter exactly 10 digits"
+                            />
                         </div>
                     </div>
 
