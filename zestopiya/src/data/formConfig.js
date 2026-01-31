@@ -85,12 +85,10 @@ export const eventFormConfig = {
         { name: "propsReq", label: "Props / Instrument Req", type: "text", required: false },
         { name: "rulesNotice", label: "Rules: Foul language is strictly prohibited.", type: "notice" }
     ],
-    "Bollywood Day": [
-        { name: "characterName", label: "Bollywood Character Name", type: "text", required: true },
-        { name: "movieReference", label: "Movie Reference", type: "text", required: true },
-        { name: "outfitDesc", label: "Costume Description", type: "text", required: true },
+    "Bollywood Evening": [
         { name: "participantType", label: "Type", type: "select", options: ["Solo", "Group"], required: true },
-        { name: "participantCount", label: "No. of Participants", type: "number", required: true, condition: (formData) => formData.participantType === 'Group' }
+        { name: "participantCount", label: "No. of Participants", type: "number", required: true, condition: (formData) => formData.participantType === 'Group' },
+        { name: "outfitDesc", label: "Outfit Description (Optional)", type: "text", required: false }
     ],
     "Mismatch Day": [
         { name: "mismatchElements", label: "Mismatch Elements Used", type: "text", required: true },

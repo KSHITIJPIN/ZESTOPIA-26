@@ -219,21 +219,21 @@ export const eventsData = [
     },
     {
         id: 12,
-        title: "Bollywood Day",
+        title: "Bollywood Evening",
         category: "Cultural",
         date: "7th Feb",
-        time: "All Day",
-        location: "SOET Building",
-        description: "Dress up as your favorite Bollywood character and relive the magic of Indian cinema!",
+        time: "Evening",
+        location: "JNEC Civil Lawns",
+        description: "An electrifying evening celebrating the magic of Bollywood with music, dance, and entertainment!",
         image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=800",
-        longDescription: "Step into the world of Bollywood! Come dressed as your favorite movie character, iconic hero, or legendary villain. From Shah Rukh Khan's signature arms wide open pose to Amitabh Bachchan's classic style - show us your best Bollywood avatar!",
+        longDescription: "Get ready for the most spectacular evening of Zestopia! Enjoy Bollywood music, iconic performances, DJ night, and celebrate the spirit of Indian cinema under the stars.",
         rules: [
-            "No masks that fully cover the face (security reasons).",
-            "Maintain decency.",
-            "Costumes should represent recognizable Bollywood characters."
+            "College ID mandatory for entry.",
+            "Dress code: Bollywood theme encouraged.",
+            "Maintain discipline and decorum."
         ],
         contact: {
-            name: "Discipline Committee",
+            name: "Cultural Committee",
             phone: "+91 98765 67890"
         }
     },
@@ -276,25 +276,7 @@ export const eventsData = [
             phone: "+91 98765 13131"
         }
     },
-    {
-        id: 14,
-        title: "Retro Night",
-        category: "Cultural",
-        date: "5th Feb",
-        time: "Evening",
-        location: "JNEC Civil Lawns",
-        description: "Travel back in time with music, fashion, and vibes from the golden era.",
-        image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800",
-        longDescription: "Dress in retro attire, enjoy classic music, and experience the nostalgia of the 70s, 80s, and 90s.",
-        rules: [
-            "Retro dress code encouraged.",
-            "College ID mandatory for entry."
-        ],
-        contact: {
-            name: "Cultural Committee",
-            phone: "+91 98765 14141"
-        }
-    },
+
     {
         id: 15,
         title: "Flash Mob",
