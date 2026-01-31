@@ -18,12 +18,12 @@ export default async function handler(req, res) {
         if (req.method === 'POST') {
             const formData = req.body;
 
-            // Normalize
+            // Normalize email if provided (optional)
             const normalizedEmail = formData.email ? formData.email.trim().toLowerCase() : '';
 
-            // 1. Basic Validation
-            if (!normalizedEmail || !formData.name) {
-                return res.status(400).json({ success: false, message: 'Name and Email are required.' });
+            // 1. Basic Validation - Only name is required, email is optional
+            if (!formData.name) {
+                return res.status(400).json({ success: false, message: 'Name is required.' });
             }
 
             // 2. Contact Number Validation (exactly 10 digits)
@@ -32,10 +32,9 @@ export default async function handler(req, res) {
                 return res.status(400).json({ success: false, message: 'Contact number must be exactly 10 digits.' });
             }
 
-            // 2. Check Duplicate (Active only)
-            // Note: DB unique index handles global uniqueness, but this gives better error msg
+            // 3. Check Duplicate using contact number and event (Active only)
             const existing = await Participant.findOne({
-                email: normalizedEmail,
+                contact: contact,
                 event: formData.event,
                 isDeleted: false
             });
