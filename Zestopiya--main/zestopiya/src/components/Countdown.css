@@ -1,0 +1,195 @@
+/* Countdown Wrapper */
+.countdown-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+/* Each Unit (Days, Hours, etc.) */
+.flip-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.flip-unit-cards {
+    display: flex;
+    gap: 6px;
+}
+
+.flip-unit-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+/* Single Flip Card */
+.flip-card {
+    position: relative;
+    width: 65px;
+    height: 90px;
+    perspective: 400px;
+    background: transparent;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    /* Dark glass shadow */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Card Faces - Glass/Dark Theme */
+.card-face {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden;
+    /* Dark glass background */
+    background: rgba(20, 20, 25, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-face span {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    /* Theme Primary Color (Pink) */
+    color: rgb(var(--primary));
+    text-shadow: 0 0 20px rgba(var(--primary), 0.5);
+    line-height: 1;
+}
+
+/* Top Static */
+.card-top {
+    top: 0;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(180deg, rgba(30, 30, 40, 0.9) 0%, rgba(20, 20, 30, 0.9) 100%);
+    align-items: flex-end;
+}
+
+.card-top span {
+    transform: translateY(50%);
+}
+
+/* Bottom Static */
+.card-bottom {
+    bottom: 0;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(180deg, rgba(20, 20, 30, 0.9) 0%, rgba(10, 10, 20, 0.9) 100%);
+    align-items: flex-start;
+}
+
+.card-bottom span {
+    transform: translateY(-50%);
+}
+
+/* Animated Top Flap */
+.card-flap-top {
+    top: 0;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(180deg, rgba(30, 30, 40, 0.9) 0%, rgba(20, 20, 30, 0.9) 100%);
+    transform-origin: bottom center;
+    align-items: flex-end;
+    z-index: 2;
+}
+
+.card-flap-top span {
+    transform: translateY(50%);
+}
+
+.card-flap-top.flip {
+    /* Smooth mechanical easing */
+    animation: flipDown 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    will-change: transform;
+}
+
+/* Animated Bottom Flap */
+.card-flap-bottom {
+    bottom: 0;
+    border-radius: 0 0 8px 8px;
+    transform-origin: top center;
+    background: linear-gradient(180deg, rgba(20, 20, 30, 0.9) 0%, rgba(10, 10, 20, 0.9) 100%);
+    align-items: flex-start;
+    z-index: 1;
+    transform: rotateX(90deg);
+}
+
+.card-flap-bottom span {
+    transform: translateY(-50%);
+}
+
+.card-flap-bottom.flip {
+    animation: flipUp 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    will-change: transform;
+}
+
+/* Keyframes */
+@keyframes flipDown {
+    0% {
+        transform: rotateX(0deg);
+    }
+
+    100% {
+        transform: rotateX(-90deg);
+    }
+}
+
+@keyframes flipUp {
+    0% {
+        transform: rotateX(90deg);
+    }
+
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+/* Decorative line/shine */
+.flip-card::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .countdown-wrapper {
+        gap: 15px;
+    }
+
+    .flip-card {
+        width: 45px;
+        height: 65px;
+    }
+
+    .card-face span {
+        font-size: 2.5rem;
+    }
+
+    .flip-unit-label {
+        font-size: 0.7rem;
+    }
+}

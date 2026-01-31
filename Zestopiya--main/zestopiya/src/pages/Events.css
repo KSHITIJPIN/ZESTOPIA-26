@@ -1,0 +1,130 @@
+.events-page {
+    padding-top: 120px;
+}
+
+.filter-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    /* Fallback for desktop */
+    margin-bottom: 50px;
+}
+
+@media (max-width: 768px) {
+    .filter-tabs {
+        justify-content: flex-start;
+        overflow-x: auto;
+        white-space: nowrap;
+        flex-wrap: nowrap;
+        padding-bottom: 10px;
+        /* Space for scrollbar if any */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        /* Firefox */
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+}
+
+.filter-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgb(var(--text-muted));
+    padding: 12px 24px;
+    /* Increased from 8px 16px */
+    font-size: 1.1rem;
+    /* Increased font size */
+    border-radius: 30px;
+    /* More rounded */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    /* Prevent squashing */
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: rgb(var(--primary));
+    color: white;
+    border-color: rgb(var(--primary));
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* 320px -> 280px for smaller phones */
+    gap: 30px;
+}
+
+.event-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(30, 30, 40, 0.6);
+}
+
+.card-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.category-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-content {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h3 {
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+.description {
+    color: rgb(var(--text-muted));
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    flex: 1;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+    color: rgb(var(--text-muted));
+    font-size: 0.9rem;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.full-width {
+    width: 100%;
+    text-align: center;
+}

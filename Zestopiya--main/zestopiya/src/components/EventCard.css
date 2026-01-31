@@ -1,0 +1,117 @@
+.event-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(30, 30, 40, 0.6);
+    height: 100%;
+    /* Ensure equal height in grid */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(var(--primary), 0.3);
+    border-color: rgba(var(--primary), 0.5);
+    z-index: 1;
+    /* Bring to front */
+}
+
+.card-image-container {
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.event-card:hover .card-image-img {
+    transform: scale(1.05);
+    /* Smooth zoom effect on hover */
+}
+
+/* Optional: Slight zoom on image hover ? */
+/* 
+.event-card:hover .card-image {
+   filter: brightness(1.1);
+} 
+*/
+
+.category-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgb(var(--secondary));
+    /* Use variable for pop */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-content {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h3 {
+    margin-bottom: 12px;
+    font-size: 1.4rem;
+    background: linear-gradient(90deg, white, rgb(var(--text-muted)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.description {
+    color: rgb(var(--text-muted));
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail svg {
+    color: rgb(var(--primary));
+}
+
+.full-width {
+    width: 100%;
+    text-align: center;
+}
+
+.card-link-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+}

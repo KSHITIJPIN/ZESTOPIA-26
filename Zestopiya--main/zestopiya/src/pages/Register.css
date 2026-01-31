@@ -1,0 +1,368 @@
+.register-page {
+    padding-top: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    /* background removed -> handled by .glass-panel */
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-header h2 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+.form-header p {
+    color: rgb(var(--text-muted));
+}
+
+/* Segmented Control */
+.segmented-control {
+    display: flex;
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 600px) {
+    .segmented-control {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2px;
+        /* Reduced gap */
+        padding: 3px;
+    }
+
+    .segment-btn {
+        padding: 8px 2px;
+        /* Reduced padding */
+        font-size: 0.75rem;
+        /* Smaller font */
+        gap: 4px;
+        flex-direction: column;
+        /* Stack icon and text */
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .segment-indicator {
+        display: none;
+        /* Hide sliding animation on very small screens for better UX */
+    }
+
+    .segment-btn.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border-radius: 8px;
+    }
+}
+
+.segment-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    color: rgb(var(--text-muted));
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 2;
+    transition: color 0.3s ease;
+    outline: none;
+}
+
+.segment-btn:focus-visible {
+    box-shadow: 0 0 0 2px rgb(var(--primary));
+}
+
+.segment-btn.active {
+    color: white;
+}
+
+.segment-indicator {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    width: calc(33.33% - 6px);
+    /* One third width minus padding */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Slide logic */
+.segment-indicator.participant {
+    transform: translateX(0);
+    left: 6px;
+}
+
+.segment-indicator.organizer {
+    transform: translateX(100%);
+    /* Moves fully to the right slot */
+    left: 0;
+    /* Reset left to combine with translate */
+    margin-left: 6px;
+    /* Compensate for gap */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: rgb(var(--primary));
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.row .form-group {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .register-page {
+        padding-top: 80px;
+    }
+
+    .form-container {
+        padding: 24px;
+        border-radius: 0;
+        /* Full width feel on mobile */
+        border-left: none;
+        border-right: none;
+    }
+
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .row .form-group {
+        width: 100%;
+    }
+}
+
+.submit-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-notice {
+    background: rgba(255, 204, 0, 0.1);
+    border-left: 3px solid #ffcc00;
+    padding: 12px;
+    color: #ffcc00;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    border-radius: 4px;
+}
+
+/* Success State */
+.success-card {
+    padding: 60px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.success-card h2 {
+    margin-bottom: 15px;
+    color: rgb(var(--secondary));
+}
+
+.success-card p {
+    color: rgb(var(--text-muted));
+    margin-bottom: 30px;
+}
+
+/* Dynamic Event Fields Section */
+.dynamic-fields {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.dynamic-fields .form-section-title {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: rgb(var(--secondary));
+}
+
+.dynamic-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.dynamic-row .form-group {
+    flex: none !important;
+    margin-bottom: 0;
+}
+
+/* Animation for appearing */
+.animate-fade-in {
+    animation: fadeSlideIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Form Notice (Rules box) */
+.form-notice {
+    background: rgba(255, 180, 0, 0.15);
+    border-left: 4px solid #ffb800;
+    padding: 12px 16px;
+    color: #ffcc00;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    line-height: 1.5;
+}
+
+/* Checkbox wrapper */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: rgb(var(--primary));
+}
+
+/* Textarea */
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: rgb(var(--primary));
+}
+
+/* Responsive for Dynamic Fields */
+@media (max-width: 768px) {
+    .dynamic-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .dynamic-fields {
+        padding: 15px;
+    }
+}
+
+.disabled-input {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding-left: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.input-group:focus-within {
+    border-color: rgb(var(--primary));
+}
+
+.input-prefix {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    margin-right: 8px;
+    user-select: none;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    padding-left: 0;
+}
+
+.input-group input:focus {
+    box-shadow: none;
+    /* Parent handles focus style */
+}
